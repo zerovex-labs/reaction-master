@@ -71,6 +71,8 @@ index.html  … 画面の構造（タイトル / SPEED TEST / MIND GAME のル�
 style.css   … デザイン・アニメーション（黒 × ネオングリーン）
 script.js   … SPEED TEST と共通処理（画面切り替え・効果音・BGM・設定の保存）
 mind.js     … MIND GAME（script.js の後に読み込む）
+manifest.webmanifest … ホーム画面に追加したときのアプリ名・アイコン・表示方法
+favicon.png / apple-touch-icon.png / icon-192.png / icon-512.png … アプリアイコン
 ```
 
 ## ランク判定
