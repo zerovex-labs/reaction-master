@@ -26,6 +26,23 @@ const MIND_TITLES = [
   { min: 0, title: "混乱中…" },
 ];
 
+// タイトル画面の MIND BEST に添えるランク（スコア基準）
+// 目安：S＝全問正解かつ速い / A＝全問正解 / B＝1ミス程度 / C＝2〜3ミス
+// ※ オンラインランキングの MIND_RANKS（平均反応時間ms基準）とは別物
+const MIND_SCORE_RANKS = [
+  { rank: "S", min: 6500 },
+  { rank: "A", min: 6200 },
+  { rank: "B", min: 5700 },
+  { rank: "C", min: 5000 },
+  { rank: "D", min: 4000 },
+  { rank: "E", min: 3000 },
+  { rank: "F", min: -Infinity },
+];
+
+function mindScoreRank(score) {
+  return MIND_SCORE_RANKS.find((r) => score >= r.min).rank;
+}
+
 const mindField = $("mind-field");
 const mindCountdownEl = $("mind-countdown");
 
@@ -125,7 +142,8 @@ function saveMindBest(record) {
 
 function updateTitleMindBest() {
   const best = loadMindBest();
-  $("title-mind-best").textContent = best ? `${best.score}` : "---";
+  const ok = best && Number.isFinite(best.score);
+  $("title-mind-best").textContent = ok ? `${best.score} (${mindScoreRank(best.score)})` : "---";
 }
 
 // ---------- タイマー管理 ----------
