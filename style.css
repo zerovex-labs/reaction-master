@@ -1421,3 +1421,322 @@ button { font: inherit; }
     animation: none;
   }
 }
+
+/* =========================================
+   オンラインランキング
+   ========================================= */
+/* タイトル右上：ランキングボタン（アイコンのみ） */
+.rk-open { width: 36px; padding: 0; justify-content: center; color: var(--neon); border-color: var(--line-strong); }
+
+/* 結果画面：ランキング欄 */
+.rk-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 7px 8px 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-soft);
+}
+.rk-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rk-line1 {
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--neon);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rk-line2 {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rk-bar[data-state="off"] .rk-line1,
+.rk-bar[data-state="idle"] .rk-line1 { color: var(--muted); letter-spacing: 0.2em; }
+.rk-bar[data-state="error"] .rk-line2 { color: var(--danger); }
+.rk-action {
+  flex: none;
+  min-width: 76px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(var(--neon-rgb), 0.06);
+  color: var(--neon);
+  font-family: var(--font-en);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+.rk-action:active { transform: scale(0.96); }
+.rk-action:disabled { opacity: 0.5; }
+.rk-bar[data-state="need-name"] .rk-action,
+.rk-bar[data-state="error"] .rk-action {
+  border-color: transparent;
+  background: var(--neon);
+  color: #04140B;
+  font-family: var(--font-jp);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 0 16px rgba(var(--neon-rgb), 0.35);
+}
+
+/* ランキング画面 */
+#screen-ranking { gap: 12px; }
+.rk-tabs {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-soft);
+}
+.rk-tab {
+  height: 38px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+}
+.rk-tab[aria-selected="true"] {
+  background: rgba(var(--neon-rgb), 0.12);
+  color: var(--neon);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.rk-me {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(var(--neon-rgb), 0.08), rgba(var(--neon-rgb), 0.02)),
+    rgba(8, 11, 16, 0.6);
+}
+.rk-me-main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.rk-me-label {
+  font-family: var(--font-en);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+}
+.rk-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+.rk-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rk-name svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--neon);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.rk-name.unset { color: var(--neon); }
+.rk-me-best { flex: none; display: flex; align-items: center; gap: 10px; }
+.rk-me-nums { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.rk-me-avg {
+  font-family: var(--font-en);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--neon);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 12px rgba(var(--neon-rgb), 0.45);
+  white-space: nowrap;
+}
+.rk-me-pos { font-size: 11px; font-weight: 700; color: var(--text-2); white-space: nowrap; }
+.rk-grade {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--neon);
+}
+.rk-me .rk-grade { width: 38px; height: 38px; font-size: 20px; border-radius: 10px; }
+
+.rk-list-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(8, 11, 16, 0.6);
+  scrollbar-width: none;
+}
+.rk-list-wrap::-webkit-scrollbar { display: none; }
+.rk-list { list-style: none; padding: 4px 0; }
+.rk-row {
+  display: grid;
+  grid-template-columns: 34px 1fr 28px 78px;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.rk-row:last-child { border-bottom: none; }
+.rk-pos {
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.rk-row.top .rk-pos { color: var(--neon); text-shadow: 0 0 10px rgba(var(--neon-rgb), 0.6); }
+.rk-row.top-1 .rk-pos { color: #EFFFF5; font-size: 15px; }
+.rk-row-name {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rk-row .rk-grade { width: 26px; height: 24px; font-size: 12px; border-radius: 6px; }
+.rk-time {
+  font-family: var(--font-en);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-2);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rk-row.me { background: rgba(var(--neon-rgb), 0.1); box-shadow: inset 3px 0 0 var(--neon); }
+.rk-row.me .rk-row-name, .rk-row.me .rk-time { color: var(--neon); }
+.rk-gap { padding: 2px 0; text-align: center; color: var(--muted); }
+.rk-message {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  text-align: center;
+  white-space: pre-line;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.8;
+  color: var(--text-2);
+}
+.rk-message[hidden] { display: none; }
+.rk-rule {
+  flex: none;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* 名前入力ダイアログ */
+.rk-dialog {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px calc(20px + var(--safe-r)) 24px calc(20px + var(--safe-l));
+  background: rgba(4, 6, 8, 0.78);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.rk-dialog[hidden] { display: none; }
+.rk-dialog-box {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 18px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(24, 33, 43, 0.98), rgba(12, 17, 24, 0.98));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(var(--neon-rgb), 0.1);
+  text-align: center;
+}
+.rk-input {
+  width: 100%;
+  height: 50px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: rgba(8, 11, 16, 0.8);
+  color: var(--text);
+  font-family: var(--font-jp);
+  font-size: 17px;              /* 16px以上：iPhoneで入力時に拡大されない */
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.rk-input:focus { border-color: var(--neon); box-shadow: 0 0 0 3px rgba(var(--neon-rgb), 0.15); }
+.rk-dialog-note { font-size: 11px; color: var(--muted); }
+.rk-dialog-buttons { grid-template-columns: 1fr 1fr; }
+
+@media (max-height: 700px) {
+  .rk-bar { min-height: 44px; padding-top: 5px; padding-bottom: 5px; }
+  .rk-action { height: 32px; }
+  .rk-row { padding: 6px 12px; }
+}
+
+/* 結果画面にランキング欄を追加した分、エンブレムと余白を少しだけ詰める */
+.rank-emblem { --size: min(42cqw, 19.5cqh, 190px); }
+.result-card { gap: clamp(8px, 1.8cqh, 20px); }
+@media (min-height: 760px) {
+  .rank-emblem { --size: min(50cqw, 23cqh, 220px); }
+}
+@media (max-height: 700px) {
+  .rank-emblem { --size: min(40cqw, 16.5cqh); }
+  .result-card { gap: 8px; }
+}
+@media (max-height: 620px) {
+  .card-brand { display: none; }
+  .rank-emblem { --size: min(40cqw, 14cqh); }
+  .stat { padding: 6px 4px; }
+  .stat-wide { padding: 7px 4px 8px; }
+}

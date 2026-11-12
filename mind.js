@@ -40,6 +40,7 @@ function newMindState() {
     lastPos: null,
     results: [],          // 各ラウンドの結果（1ラウンド1件だけ）
     times: [],            // 緑・黄の正解操作にかかった時間(ms)。赤は含めない
+    rankTimes: [],        // ランキング用の反応時間(ms)：緑＝タップ、黄＝1回目のタップまで。赤は含めない
     correct: 0,
     misses: 0,
     streak: 0,
@@ -291,7 +292,8 @@ function onMindPointerDown(e) {
     } else {
       const gap = now - cur.firstTapAt;
       if (gap <= MIND.doubleTapGapMs && elapsed <= MIND.tapLimitMs) {
-        resolveRound(true, { time: elapsed, px, py });
+        // first：出現〜1回目のタップ（ランキング用。判定には使わない）
+        resolveRound(true, { time: elapsed, first: cur.firstTapAt - cur.spawnAt, px, py });
       } else {
         resolveRound(false, { reason: "slow", px, py });
       }
@@ -319,6 +321,10 @@ function resolveRound(success, info) {
       const ms = Math.round(info.time);
       record.time = ms;
       mind.times.push(ms); // 赤の待機成功は平均時間に含めない
+      // ランキング用：黄は1回目のタップまで（2回目までの間隔を含めない）
+      const rankMs = Math.round(color === "yellow" ? info.first : info.time);
+      record.rankTime = rankMs;
+      mind.rankTimes.push(rankMs);
       points += Math.round(Math.max(0, MIND.tapLimitMs - ms) / 15);
     }
     points += Math.min(mind.streak - 1, 9) * 10;
@@ -403,6 +409,14 @@ function finishMind() {
     score: mind.score, correct: mind.correct, total, misses: mind.misses,
     accuracy, avg, maxStreak: mind.maxStreak, title,
   };
+  // オンラインランキング（全問正解のときだけ登録対象。判定・得点には影響しない）
+  if (typeof rankingOnResult === "function") {
+    rankingOnResult("mind", {
+      times: mind.rankTimes.slice(),
+      misses: mind.misses,
+      perfect: mind.misses === 0 && mind.correct === MIND.rounds,
+    });
+  }
 
   const scoreEl = $("mind-res-score");
   scoreEl.textContent = `${mind.score}`;

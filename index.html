@@ -45,6 +45,13 @@
           </svg>
           <span class="sound-state">ON</span>
         </button>
+        <button id="btn-ranking" class="sound-toggle rk-open" type="button" aria-label="オンラインランキング">
+          <svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 4h10v5a5 5 0 0 1-10 0z"/>
+            <path d="M7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/>
+            <path d="M12 14v3M8.5 20h7l-1-3h-5z"/>
+          </svg>
+        </button>
         </div>
       </div>
 
@@ -172,6 +179,13 @@
       </div>
 
       <div class="result-buttons">
+        <div id="rk-bar-speed" class="rk-bar" data-state="idle">
+          <div class="rk-info">
+            <span class="rk-line1">ONLINE RANKING</span>
+            <span class="rk-line2">---</span>
+          </div>
+          <button class="rk-action" type="button" data-mode="speed">RANKING</button>
+        </div>
         <button id="btn-retry" class="btn btn-primary btn-retry"><span class="btn-main">RETRY</span></button>
         <div class="btn-row">
           <button id="btn-share" class="btn btn-outline btn-share">
@@ -302,6 +316,13 @@
       </div>
 
       <div class="result-buttons">
+        <div id="rk-bar-mind" class="rk-bar" data-state="idle">
+          <div class="rk-info">
+            <span class="rk-line1">ONLINE RANKING</span>
+            <span class="rk-line2">---</span>
+          </div>
+          <button class="rk-action" type="button" data-mode="mind">RANKING</button>
+        </div>
         <button id="btn-mind-retry" class="btn btn-primary btn-retry"><span class="btn-main">RETRY</span></button>
         <div class="btn-row">
           <button id="btn-mind-share" class="btn btn-outline btn-share">
@@ -312,9 +333,64 @@
         </div>
       </div>
     </section>
+
+    <!-- ===== オンラインランキング ===== -->
+    <section id="screen-ranking" class="screen">
+      <div class="topbar">
+        <span class="tag"><i class="dot"></i>ONLINE RANKING</span>
+        <span id="rk-count" class="tag">---</span>
+      </div>
+
+      <div class="rk-tabs" role="tablist">
+        <button id="rk-tab-speed" class="rk-tab" type="button" role="tab" data-mode="speed" aria-selected="true">SPEED TEST</button>
+        <button id="rk-tab-mind" class="rk-tab" type="button" role="tab" data-mode="mind" aria-selected="false">MIND GAME</button>
+      </div>
+
+      <div class="rk-me">
+        <div class="rk-me-main">
+          <span class="rk-me-label">YOU</span>
+          <button id="rk-name" class="rk-name" type="button" aria-label="プレイヤー名を変更">
+            <span id="rk-name-text">名前未登録</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></svg>
+          </button>
+        </div>
+        <div class="rk-me-best">
+          <span id="rk-me-rank" class="rk-grade">-</span>
+          <div class="rk-me-nums">
+            <span id="rk-me-avg" class="rk-me-avg">---</span>
+            <span id="rk-me-pos" class="rk-me-pos">---</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rk-list-wrap">
+        <ol id="rk-list" class="rk-list"></ol>
+        <p id="rk-message" class="rk-message" hidden></p>
+      </div>
+      <p id="rk-rule" class="rk-rule">---</p>
+
+      <div class="menu">
+        <button id="btn-rk-back" class="btn btn-ghost btn-back"><span class="btn-main">BACK</span></button>
+      </div>
+    </section>
+
+    <!-- ===== プレイヤー名の入力 ===== -->
+    <div id="rk-dialog" class="rk-dialog" hidden>
+      <form id="rk-form" class="rk-dialog-box" autocomplete="off">
+        <p class="sub-label">PLAYER NAME</p>
+        <input id="rk-name-input" class="rk-input" type="text" maxlength="12" enterkeyhint="done"
+               autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ニックネーム" aria-label="プレイヤー名">
+        <p id="rk-dialog-note" class="rk-dialog-note">ランキングに表示されます（12文字まで）</p>
+        <div class="btn-row rk-dialog-buttons">
+          <button id="rk-cancel" class="btn btn-ghost" type="button"><span class="btn-main">CANCEL</span></button>
+          <button class="btn btn-primary" type="submit"><span class="btn-main">OK</span></button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="script.js"></script>
   <script src="mind.js"></script>
+  <script src="ranking.js"></script>
 </body>
 </html>

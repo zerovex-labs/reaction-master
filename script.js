@@ -839,6 +839,10 @@ function showResult() {
   $("res-pb").textContent = formatBest(loadBest());
 
   state.result = { avg, best, accuracy, misses: state.misses, rank: r.rank, title: r.title };
+  // オンラインランキング（ミス0のときだけ登録対象。判定・ランク計算には影響しない）
+  if (typeof rankingOnResult === "function") {
+    rankingOnResult("speed", { times: times.slice(), misses: state.misses, perfect: state.misses === 0 });
+  }
   showScreen("result");
 }
 
