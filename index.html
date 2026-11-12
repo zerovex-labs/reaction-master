@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080B10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="REACTION MASTER - 反射神経を極めろ。ターゲットを素早くタップするSPEED TESTと、色で操作を変えるMIND GAMEの2モード。">
+  <title>REACTION MASTER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow" aria-hidden="true"></div>
+
+    <!-- ===== タイトル画面 ===== -->
+    <section id="screen-title" class="screen active">
+      <div class="topbar">
+        <span class="tag"><i class="dot"></i>SYSTEM ONLINE</span>
+        <div class="toggles">
+        <button id="btn-sound" class="sound-toggle" type="button" aria-pressed="true" aria-label="効果音のON/OFF">
+          <svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path class="spk" d="M4 9h4l5-4v14l-5-4H4z"/>
+            <path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>
+            <path class="mute" d="M16 9l6 6M22 9l-6 6"/>
+          </svg>
+          <span class="sound-state">ON</span>
+        </button>
+        <button id="btn-bgm" class="sound-toggle" type="button" aria-pressed="true" aria-label="BGMのON/OFF">
+          <svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 17.5V6l11-2.5v11.5"/>
+            <circle class="spk" cx="6.5" cy="17.5" r="2.7"/>
+            <circle class="spk" cx="17.5" cy="15" r="2.7"/>
+            <path class="mute" d="M3 3l18 18"/>
+          </svg>
+          <span class="sound-state">ON</span>
+        </button>
+        </div>
+      </div>
+
+      <div class="title-hero">
+        <div class="reticle" aria-hidden="true">
+          <span class="ring ring-1"></span>
+          <span class="ring ring-2"></span>
+          <span class="ring ring-3"></span>
+          <span class="cross"></span>
+        </div>
+        <p class="sub-label">REFLEX TRAINING SYSTEM</p>
+        <h1 class="logo">
+          <span class="logo-top">REACTION</span>
+          <span class="logo-bottom">MASTER</span>
+        </h1>
+        <div class="best-box best-dual">
+          <div class="best-col">
+            <span class="best-label">SPEED BEST</span>
+            <span id="title-best" class="best-value">---</span>
+          </div>
+          <span class="best-sep" aria-hidden="true"></span>
+          <div class="best-col">
+            <span class="best-label">MIND BEST</span>
+            <span id="title-mind-best" class="best-value">---</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu">
+        <div class="audio-panel">
+          <label class="vol-row" for="vol-bgm">
+            <span class="vol-name">BGM</span>
+            <input type="range" id="vol-bgm" class="vol-slider" min="0" max="100" step="1" value="30" aria-label="BGMの音量">
+            <span id="vol-bgm-val" class="vol-val">30</span>
+          </label>
+          <label class="vol-row" for="vol-sfx">
+            <span class="vol-name">SE</span>
+            <input type="range" id="vol-sfx" class="vol-slider" min="0" max="100" step="1" value="100" aria-label="効果音の音量">
+            <span id="vol-sfx-val" class="vol-val">100</span>
+          </label>
+        </div>
+        <div class="mode-buttons">
+          <button id="btn-start" class="btn btn-primary btn-mode">
+            <span class="btn-main">SPEED TEST</span>
+            <span class="btn-sub">20 TARGETS · 最速で撃ち抜け</span>
+          </button>
+          <button id="btn-mind" class="btn btn-outline btn-mode btn-mind">
+            <span class="btn-main">MIND GAME</span>
+            <span class="btn-sub">30 ROUNDS · 色を見極めて反応せよ</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ゲーム画面 ===== -->
+    <section id="screen-game" class="screen">
+      <header class="hud">
+        <div class="hud-panel">
+          <div class="hud-item hud-time">
+            <span class="hud-label">TIME</span>
+            <span id="hud-time" class="hud-value">0.00</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">HIT</span>
+            <span id="hud-count" class="hud-value">0/20</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">LAST</span>
+            <span id="hud-last" class="hud-value">---</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">MISS</span>
+            <span id="hud-miss" class="hud-value">0</span>
+          </div>
+        </div>
+        <div class="progress"><div id="progress-bar"></div></div>
+      </header>
+      <div id="field">
+        <div id="countdown" class="countdown"></div>
+      </div>
+    </section>
+
+    <!-- ===== リザルト画面 ===== -->
+    <section id="screen-result" class="screen">
+      <div class="topbar">
+        <span class="tag"><i class="dot"></i>RESULT</span>
+        <span class="tag">SPEED TEST</span>
+      </div>
+
+      <div class="result-card">
+        <p id="new-record" class="new-record">NEW RECORD</p>
+        <div class="rank-wrap">
+          <span class="rank-caption">RANK</span>
+          <div class="rank-emblem">
+            <span class="rank-ring" aria-hidden="true"></span>
+            <div id="rank" class="rank">S</div>
+          </div>
+          <p id="rank-title" class="rank-title">---</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat stat-wide">
+            <span class="stat-label">AVERAGE</span>
+            <span id="res-avg" class="stat-value big">---</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">BEST</span>
+            <span id="res-best" class="stat-value">---</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">ACCURACY</span>
+            <span id="res-acc" class="stat-value">---</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">MISS</span>
+            <span id="res-miss" class="stat-value">---</span>
+          </div>
+        </div>
+
+        <div class="card-foot">
+          <span class="pb-label">PERSONAL BEST</span>
+          <span id="res-pb" class="pb-value">---</span>
+        </div>
+        <p class="card-brand">REACTION MASTER</p>
+      </div>
+
+      <div class="result-buttons">
+        <button id="btn-retry" class="btn btn-primary btn-retry"><span class="btn-main">RETRY</span></button>
+        <div class="btn-row">
+          <button id="btn-share" class="btn btn-outline btn-share">
+            <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <span class="btn-main">SHARE</span>
+          </button>
+          <button id="btn-home" class="btn btn-ghost"><span class="btn-main">TITLE</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MIND GAME：ルール説明 ===== -->
+    <section id="screen-mind-rules" class="screen">
+      <div class="topbar">
+        <span class="tag"><i class="dot"></i>MIND GAME</span>
+        <span class="tag">30 ROUNDS</span>
+      </div>
+
+      <div class="rules-wrap">
+        <p class="sub-label">HOW TO PLAY</p>
+        <h2 class="rules-title">色を見極めて反応せよ</h2>
+        <ul class="rule-list">
+          <li class="rule rule-green">
+            <span class="rule-icon mt-look m-green" aria-hidden="true"></span>
+            <div class="rule-text">
+              <p class="rule-name">GREEN<span>タップ</span></p>
+              <p class="rule-desc"><b>1.5秒以内</b>に<b>1回タップ</b></p>
+            </div>
+          </li>
+          <li class="rule rule-red">
+            <span class="rule-icon mt-look m-red" aria-hidden="true"></span>
+            <div class="rule-text">
+              <p class="rule-name">RED<span>待つ</span></p>
+              <p class="rule-desc"><b>1.0秒間</b>タップせずに待つ。<b>触るとミス</b></p>
+            </div>
+          </li>
+          <li class="rule rule-yellow">
+            <span class="rule-icon mt-look m-yellow" aria-hidden="true"></span>
+            <div class="rule-text">
+              <p class="rule-name">YELLOW<span>2回タップ</span></p>
+              <p class="rule-desc"><b>1.5秒以内</b>に<b>2回タップ</b>（間隔0.5秒以内）</p>
+            </div>
+          </li>
+        </ul>
+        <p class="rules-note">時間切れ・誤操作はミス。<br>速く正確に、連続正解でボーナス！</p>
+      </div>
+
+      <div class="menu">
+        <button id="btn-mind-go" class="btn btn-primary btn-start">
+          <span class="btn-main">START</span>
+          <span class="btn-sub">準備ができたらタップ</span>
+        </button>
+        <button id="btn-mind-back" class="btn btn-ghost btn-back"><span class="btn-main">BACK</span></button>
+      </div>
+    </section>
+
+    <!-- ===== MIND GAME：プレイ画面 ===== -->
+    <section id="screen-mind" class="screen">
+      <header class="hud">
+        <div class="hud-panel">
+          <div class="hud-item hud-time">
+            <span class="hud-label">SCORE</span>
+            <span id="mind-score" class="hud-value">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">ROUND</span>
+            <span id="mind-round" class="hud-value">0/30</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">STREAK</span>
+            <span id="mind-streak" class="hud-value">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">MISS</span>
+            <span id="mind-miss" class="hud-value">0</span>
+          </div>
+        </div>
+        <div class="progress"><div id="mind-progress"></div></div>
+      </header>
+      <div id="mind-field">
+        <div id="mind-countdown" class="countdown"></div>
+      </div>
+    </section>
+
+    <!-- ===== MIND GAME：結果画面 ===== -->
+    <section id="screen-mind-result" class="screen">
+      <div class="topbar">
+        <span class="tag"><i class="dot"></i>RESULT</span>
+        <span class="tag">MIND GAME</span>
+      </div>
+
+      <div class="result-card">
+        <p id="mind-new-record" class="new-record">NEW RECORD</p>
+        <div class="rank-wrap">
+          <span class="rank-caption">SCORE</span>
+          <div class="rank-emblem">
+            <span class="rank-ring" aria-hidden="true"></span>
+            <div id="mind-res-score" class="score-big">0</div>
+          </div>
+          <p id="mind-res-title" class="rank-title">---</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat stat-wide">
+            <span class="stat-label">CORRECT</span>
+            <span id="mind-res-correct" class="stat-value big">---</span>
+            <span id="mind-res-miss" class="stat-sub">MISS ---</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">ACCURACY</span>
+            <span id="mind-res-acc" class="stat-value">---</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">AVG TIME</span>
+            <span id="mind-res-avg" class="stat-value">---</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label stat-label-tight">MAX STREAK</span>
+            <span id="mind-res-streak" class="stat-value">---</span>
+          </div>
+        </div>
+
+        <div class="card-foot">
+          <span class="pb-label">BEST SCORE</span>
+          <span id="mind-res-best" class="pb-value">---</span>
+        </div>
+        <p class="card-brand">REACTION MASTER</p>
+      </div>
+
+      <div class="result-buttons">
+        <button id="btn-mind-retry" class="btn btn-primary btn-retry"><span class="btn-main">RETRY</span></button>
+        <div class="btn-row">
+          <button id="btn-mind-share" class="btn btn-outline btn-share">
+            <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <span class="btn-main">SHARE</span>
+          </button>
+          <button id="btn-mind-home" class="btn btn-ghost"><span class="btn-main">TITLE</span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="mind.js"></script>
+</body>
+</html>
