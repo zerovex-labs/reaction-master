@@ -174,22 +174,6 @@ button { font: inherit; }
   50% { opacity: 0.25; }
 }
 
-/* 制作者クレジット（タイトル画面右上・トグルの下） */
-#screen-title .topbar { position: relative; }
-.credit {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  margin: 0;
-  font-family: var(--font-jp);
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  white-space: nowrap;
-  pointer-events: none;
-}
-
 /* 効果音 ON/OFF トグル（タイトル画面右上） */
 .toggles {
   display: flex;
